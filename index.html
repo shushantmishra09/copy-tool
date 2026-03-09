@@ -2,45 +2,39 @@
 
 const params = new URLSearchParams(window.location.search);
 
-const policy = params.get('policy');
+const policyNo = params.get('policy');
 const dob = params.get('dob');
 
-const policyDisplay = document.getElementById("policy-display");
-const dobDisplay = document.getElementById("dob-display");
-const status = document.getElementById("status");
-const openBtn = document.getElementById("open-btn");
+const display = document.getElementById('policy-display');
+const status = document.getElementById('status');
+const btn = document.getElementById('manual-btn');
 
-if(policy) policyDisplay.innerText = policy;
-if(dob) dobDisplay.innerText = dob;
-
-async function copyData(){
-
-if(!policy || !dob){
-status.innerText = "Missing Policy or DOB";
-return;
+if(policyNo && dob){
+    display.innerText = policyNo + " & " + dob;
 }
 
-const textToCopy = `${policy}&${dob}`;
+async function copyPolicy(){
 
-try{
+    if(!policyNo || !dob){
+        status.innerText = "Policy or DOB missing";
+        return;
+    }
 
-await navigator.clipboard.writeText(textToCopy);
+    const textToCopy = policyNo + " & " + dob;
 
-status.innerText = "✅ Copied!";
-openBtn.style.display="block";
+    try{
+        await navigator.clipboard.writeText(textToCopy);
+        status.innerText = "✅ Copied!";
+        btn.style.display="block";
 
-setTimeout(()=>{
-window.location.href="https://lic.corover.ai/";
-},1500);
+        setTimeout(()=>{
+            window.location.href="https://lic.corover.ai/";
+        },1500);
 
-}
-catch(err){
-
-status.innerText="Copy failed. Copy manually.";
-openBtn.style.display="block";
-
-}
-
+    }catch(err){
+        status.innerText="Copy failed. Please copy manually.";
+        btn.style.display="block";
+    }
 }
 
 </script>
