@@ -1,29 +1,98 @@
+CHAT GPT
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIC Policy Copy Tool</title>
+
+<style>
+body{
+    font-family:sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
+    margin:0;
+    background:#f0f2f5;
+    text-align:center;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    width:85%;
+    max-width:400px;
+}
+
+.policy-box{
+    font-size:1.5rem;
+    font-weight:bold;
+    color:#00529b;
+    margin:20px 0;
+    border:2px dashed #ccc;
+    padding:15px;
+    border-radius:8px;
+    background:#fff9e6;
+}
+
+.btn{
+    display:block;
+    width:100%;
+    padding:15px;
+    background:#00529b;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+    font-weight:bold;
+    border:none;
+    cursor:pointer;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2 id="status">Ready to Copy</h2>
+
+    <div id="policy-display" class="policy-box">-------</div>
+
+    <p>Click the button to copy the policy number.</p>
+
+    <button class="btn" onclick="copyPolicy()">Copy Policy Number</button>
+
+    <a href="https://lic.corover.ai/" class="btn" id="manual-btn" style="display:none;">
+        Open LIC Mitra
+    </a>
+</div>
+
 <script>
 
 const params = new URLSearchParams(window.location.search);
-
-const policyNo = params.get('policy');
-const dob = params.get('dob');
+const policyNo = params.get('text');
 
 const display = document.getElementById('policy-display');
 const status = document.getElementById('status');
 const btn = document.getElementById('manual-btn');
 
-if(policyNo && dob){
-    display.innerText = policyNo + " & " + dob;
+if(policyNo){
+    display.innerText = policyNo;
 }
 
 async function copyPolicy(){
 
-    if(!policyNo || !dob){
-        status.innerText = "Policy or DOB missing";
+    if(!policyNo){
+        status.innerText = "No policy found";
         return;
     }
 
-    const textToCopy = policyNo + " & " + dob;
-
     try{
-        await navigator.clipboard.writeText(textToCopy);
+        await navigator.clipboard.writeText(policyNo);
         status.innerText = "✅ Copied!";
         btn.style.display="block";
 
@@ -38,3 +107,6 @@ async function copyPolicy(){
 }
 
 </script>
+
+</body>
+</html>
