@@ -6,48 +6,41 @@
     <title>LIC Policy Copy Tool</title>
     <style>
         body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f0f2f5; text-align: center; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 80%; max-width: 400px; }
-        .btn { display: block; width: 100%; padding: 15px; margin-top: 20px; background: #00529b; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; }
-        #policy-display { font-size: 1.5rem; font-weight: bold; color: #333; margin: 15px 0; border: 2px dashed #ccc; padding: 10px; border-radius: 5px; background: #fff9e6; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 85%; max-width: 400px; }
+        .policy-box { font-size: 1.5rem; font-weight: bold; color: #00529b; margin: 20px 0; border: 2px dashed #ccc; padding: 15px; border-radius: 8px; background: #fff9e6; }
+        .btn { display: block; width: 100%; padding: 15px; background: #00529b; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
+    <div class="card">
+        <h2 id="status">Copying...</h2>
+        <div id="policy-display" class="policy-box">-------</div>
+        <p>Please wait a moment.</p>
+        <a href="https://lic.corover.ai/" class="btn" id="manual-btn" style="display:none;">Open LIC Mitra</a>
+    </div>
 
-<div class="card">
-    <h2 id="msg">Copying...</h2>
-    <div id="policy-display">-------</div>
-    <p id="sub-msg">Please wait while we copy the number.</p>
-    <a href="https://lic.corover.ai/" class="btn" id="go-btn" style="display:none;">Open LIC Mitra</a>
-</div>
+    <script>
+        async function runCopy() {
+            const params = new URLSearchParams(window.location.search);
+            const policyNo = params.get('text');
+            const display = document.getElementById('policy-display');
+            const status = document.getElementById('status');
+            const btn = document.getElementById('manual-btn');
 
-<script>
-    async function handleCopy() {
-        const params = new URLSearchParams(window.location.search);
-        const policyNo = params.get('text');
-        const display = document.getElementById('policy-display');
-        const msg = document.getElementById('msg');
-        const goBtn = document.getElementById('go-btn');
-
-        if (policyNo) {
-            display.innerText = policyNo;
-            try {
-                // This copies the number to the phone/PC clipboard
-                await navigator.clipboard.writeText(policyNo);
-                msg.innerText = "✅ Policy Copied!";
-                goBtn.style.display = "block";
-
-                // Auto-open LIC Mitra after a short delay
-                setTimeout(() => {
-                    window.location.href = "https://lic.corover.ai/";
-                }, 1500);
-            } catch (err) {
-                msg.innerText = "Tap below to copy manually";
-                goBtn.style.display = "block";
+            if (policyNo) {
+                display.innerText = policyNo;
+                try {
+                    await navigator.clipboard.writeText(policyNo);
+                    status.innerText = "✅ Copied!";
+                    btn.style.display = "block";
+                    setTimeout(() => { window.location.href = "https://lic.corover.ai/"; }, 1500);
+                } catch (err) {
+                    status.innerText = "Manual Copy Required";
+                    btn.style.display = "block";
+                }
             }
         }
-    }
-    window.onload = handleCopy;
-</script>
-
+        window.onload = runCopy;
+    </script>
 </body>
 </html>
